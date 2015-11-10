@@ -57,16 +57,20 @@ def find_variant(name, version=None):
     the correct version to use for it.
     Return (None, None) if we can't find a match.
     """
+    found_variant = (None, None)
     prod = None
     for prod in SUPPORTED_VARIANTS:
         if prod.name == name:
             if version is None:
-                return (prod, prod.latest_version())
+                found_variant = (prod, prod.latest_version())
             for v in prod.versions:
                 if v.name == version:
-                    return (prod, v)
+                    found_variant = (prod, v)
 
-    return (None, None)
+    if not found_variant in get_variant_version_combos():
+        found_variant = (None, None)
+
+    return found_variant
 
 def get_variant_version_combos():
     combos = []
